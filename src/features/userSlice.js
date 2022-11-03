@@ -46,10 +46,33 @@ export const getUser = createAsyncThunk(
         throw new Error('Server error!');
       }
       dispatch(setUser(res.data.user));
+      console.log(res.data.token);
       localStorage.setItem('token', res.data.token);
     } catch (error) {
       const messageError = error.response.data.message;
 
+      return rejectWithValue(messageError);
+    }
+  }
+);
+
+export const authUser = createAsyncThunk(
+  'user/authUser',
+  async (user, { rejectWithValue, dispatch }) => {
+    try {
+      const res = await axios.get('http://localhost:5000/api/auth/auth', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+
+      if (!res.statusText) {
+        throw new Error('Server error!');
+      }
+      dispatch(setUser(res.data.user));
+      console.log(res.data.token);
+      localStorage.setItem('token', res.data.token);
+    } catch (error) {
+      const messageError = error.response.data.message;
+      localStorage.removeItem('token');
       return rejectWithValue(messageError);
     }
   }
