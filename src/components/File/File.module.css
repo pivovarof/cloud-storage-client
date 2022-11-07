@@ -1,0 +1,26 @@
+.fileList {
+  display: flex;
+  align-items: center;
+  text-align: start;
+  border-bottom: 2px solid #7987a9;
+  margin-top: 40px;
+}
+
+.file,
+.date,
+.size {
+  flex-grow: 2;
+}
+
+.file {
+  font-size: 40px;
+  padding-left: 20px;
+}
+
+.name {
+  flex-grow: 6;
+}
+
+.colum {
+  color: #cdd6e7;
+}

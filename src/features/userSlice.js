@@ -25,7 +25,6 @@ export const signUpUser = createAsyncThunk(
 
       localStorage.setItem('token', res.data.token);
     } catch (error) {
-      console.log('ERROR: ' + error);
       const messageError = error.response.data.message;
 
       return rejectWithValue(messageError);
@@ -46,7 +45,7 @@ export const getUser = createAsyncThunk(
         throw new Error('Server error!');
       }
       dispatch(setUser(res.data.user));
-      console.log(res.data.token);
+
       localStorage.setItem('token', res.data.token);
     } catch (error) {
       const messageError = error.response.data.message;
@@ -68,8 +67,7 @@ export const authUser = createAsyncThunk(
         throw new Error('Server error!');
       }
       dispatch(setUser(res.data.user));
-      console.log(res.data.token);
-      localStorage.setItem('token', res.data.token);
+      // localStorage.setItem('token', res.data.token);
     } catch (error) {
       const messageError = error.response.data.message;
       localStorage.removeItem('token');

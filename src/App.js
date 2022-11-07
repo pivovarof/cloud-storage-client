@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 import './App.css';
 import AuthForm from './components/AuthForm/AuthForm';
-import NavBar from './components/NavBar/NavBar';
+import WorkSpace from './components/WorkSpace/WorkSpace';
 import { authUser } from './features/userSlice';
 
 function App() {
@@ -14,7 +14,7 @@ function App() {
     dispatch(authUser());
   }, [dispatch]);
 
-  return <div className="App">{!isAuth ? <AuthForm /> : <NavBar />}</div>;
+  return <div className="App">{!isAuth ? <AuthForm /> : <WorkSpace />}</div>;
 }
 
 export default App;

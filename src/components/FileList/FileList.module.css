@@ -1,0 +1,29 @@
+.wrapFileList {
+  margin: 20px 30px;
+}
+
+.headerline {
+  display: flex;
+  text-align: start;
+  border-bottom: 2px solid #7987a9;
+  margin-bottom: 20px;
+  padding: 10px;
+  color: #7987a9;
+}
+
+.file,
+.date,
+.size {
+  flex-grow: 2;
+}
+
+.file,
+.date,
+.name,
+.size {
+  padding-left: 20px;
+}
+
+.name {
+  flex-grow: 6;
+}
