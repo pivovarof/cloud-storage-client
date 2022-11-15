@@ -27,3 +27,9 @@
 .name {
   flex-grow: 6;
 }
+
+.noFiles {
+  font-size: 30px;
+  color: white;
+  margin-top: 20%;
+}

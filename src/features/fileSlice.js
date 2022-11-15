@@ -4,6 +4,10 @@ import axios from 'axios';
 const initialState = {
   files: [],
   currentDir: null,
+  currentDirName: null,
+  popupDisplay: 'none',
+  dirStack: [],
+  loading: false,
 };
 
 export const getFiles = createAsyncThunk(
@@ -26,6 +30,76 @@ export const getFiles = createAsyncThunk(
   }
 );
 
+export const createDir = createAsyncThunk(
+  'file/createDir',
+  async ({ dirId, name }, { rejectWithValue, dispatch }) => {
+    try {
+      const token = `Bearer ${localStorage.getItem('token')}`;
+
+      const res = await axios.post(
+        'http://localhost:5000/api/files',
+        {
+          name,
+          parent: dirId,
+          type: 'dir',
+        },
+        {
+          headers: { Authorization: token },
+        }
+      );
+      dispatch(addFile(res.data));
+    } catch (e) {
+      return rejectWithValue(e);
+    }
+  }
+);
+export const fileUpload = createAsyncThunk(
+  'file/fileUpload',
+  async ({ file, dirId }, { rejectWithValue, dispatch }) => {
+    try {
+      const token = `Bearer ${localStorage.getItem('token')}`;
+      const formData = new FormData();
+      formData.append('file', file);
+      if (dirId) {
+        formData.append('parent', dirId);
+      }
+      const res = await axios.post(
+        'http://localhost:5000/api/files/upload',
+        formData,
+
+        {
+          headers: { Authorization: token },
+          onUploadProgress: (progressEvent) => {
+            const totalLength = progressEvent.lengthComputable
+              ? progressEvent.total
+              : progressEvent.target.getResponseHeader('content-length') ||
+                progressEvent.target.getResponseHeader(
+                  'x-decompressed-content-length'
+                );
+
+            // const totalLength = progressEvent.lengthComputable
+            //   ? progressEvent.total
+            //   : progressEvent.target.getResponseHeader('content-length') ||
+            //     progressEvent.target.getResponseHeader(
+            //       'x-decompressed-content-length'
+            //     );
+            console.log('total');
+            if (totalLength) {
+              let progress = Math.round(
+                (progressEvent.loaded * 100) / totalLength
+              );
+              console.log(progress);
+            }
+          },
+        }
+      );
+      dispatch(addFile(res.data));
+    } catch (e) {
+      return rejectWithValue(e);
+    }
+  }
+);
+
 const fileSlice = createSlice({
   name: 'file',
   initialState,
@@ -36,20 +110,46 @@ const fileSlice = createSlice({
     setCurrentDir: (state, action) => {
       return { ...state, currentDir: action.payload };
     },
+    setCurrentDirName: (state, action) => {
+      return { ...state, currentDirName: action.payload };
+    },
+    addFile: (state, action) => {
+      return { ...state, files: [...state.files, action.payload] };
+    },
+    popupVis: (state, action) => {
+      return { ...state, popupDisplay: action.payload };
+    },
+    pushDirStack: (state, action) => {
+      return { ...state, dirStack: [...state.dirStack, action.payload] };
+    },
+    popDirStack: (state, action) => {
+      return {
+        ...state,
+        dirStack: [...state.dirStack.slice(0, -1)],
+      };
+    },
   },
   extraReducers: {
     [getFiles.pending]: (state) => {
-      console.log('pending');
+      state.loading = true;
     },
     [getFiles.fulfilled]: (state, action) => {
-      console.log('fulfilled');
+      state.loading = false;
     },
 
     [getFiles.rejected]: (state, action) => {
-      console.log('rejected');
+      state.loading = false;
     },
   },
 });
 
-export const { setFiles, setCurrentDir } = fileSlice.actions;
+export const {
+  setFiles,
+  setCurrentDir,
+  setCurrentDirName,
+  addFile,
+  popupVis,
+  pushDirStack,
+  popDirStack,
+} = fileSlice.actions;
 export default fileSlice.reducer;

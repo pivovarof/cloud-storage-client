@@ -4,9 +4,7 @@ import style from './FileList.module.css';
 import File from '../File/File';
 
 const FileList = () => {
-  const files = useSelector((state) =>
-    state.file.files.map((file) => <File key={file._id} file={file} />)
-  );
+  const files = useSelector((state) => state.file.files);
 
   return (
     <div className={style.wrapFileList}>
@@ -16,7 +14,11 @@ const FileList = () => {
         <div className={style.date}>Date</div>
         <div className={style.size}>Size</div>
       </div>
-      {files}
+      {files.length === 0 ? (
+        <div className={style.noFiles}>No files</div>
+      ) : (
+        files.map((file) => <File key={file._id} file={file} />)
+      )}
     </div>
   );
 };

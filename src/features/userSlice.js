@@ -9,7 +9,7 @@ const initialState = {
 };
 
 export const signUpUser = createAsyncThunk(
-  'user/getUser',
+  'user/singUser',
   async (user, { rejectWithValue, dispatch }) => {
     try {
       const res = await axios.post(

@@ -7,6 +7,7 @@ import TabPanel from '@mui/lab/TabPanel';
 
 import LoginForm from '../LoginForm/LoginForm';
 import SignUpForm from '../SignUpForm/SignUpForm';
+import style from './AuthForm.module.css';
 
 export default function AuthForm() {
   const [value, setValue] = React.useState('1');
@@ -24,10 +25,9 @@ export default function AuthForm() {
         justifyContent: 'start',
         alignItems: 'center',
         flexDirection: 'column',
-        marginTop: '40px',
       }}
     >
-      <div>
+      <div className={style.wrapAuthForm}>
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '100%' }}>
             <TabList

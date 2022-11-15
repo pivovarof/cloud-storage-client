@@ -1,0 +1,29 @@
+.conteiner {
+  padding: 10px;
+}
+
+.inputUpload {
+  display: none;
+}
+
+.lableUpload {
+  margin: 0 10px;
+  padding: 5px 20px;
+  background-color: #4c5375;
+  border: 1px solid #cdd6e7;
+  border-radius: 10px;
+  font-size: 20px;
+  color: #cdd6e7;
+  cursor: pointer;
+}
+.lableUpload:hover {
+  background-color: #737daf;
+}
+
+.folderPath {
+  margin: 20px 0;
+  padding: 0 20px;
+  color: #cdd6e7;
+  width: 100%;
+  text-align: start;
+}

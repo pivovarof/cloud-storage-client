@@ -1,14 +1,19 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 import style from './WorkSpace.module.css';
 import NavBar from '../NavBar/NavBar';
 import FileList from '../FileList/FileList';
+import Sidebar from '../Sidebar/Sidebar';
+import MenuControl from '../Menu/MenuControl';
+import Popup from '../Popup/Popup';
 import { getFiles } from '../../features/fileSlice';
 
 const WorkSpace = () => {
   const dispatch = useDispatch();
   const currentDir = useSelector((state) => state.file.currentDir);
+  const loading = useSelector((state) => state.file.loading);
 
   useEffect(() => {
     dispatch(getFiles(currentDir));
@@ -16,11 +21,29 @@ const WorkSpace = () => {
 
   return (
     <div className={style.wrapWorkSpace}>
-      <NavBar />
       <div className={style.wrapContent}>
-        <div className={style.infoWindow}></div>
-        <div className={style.mainContent}>
-          <FileList />
+        <Popup />
+        <NavBar />
+        <MenuControl />
+        <div className={style.wrapMainContent}>
+          <Sidebar />
+
+          <div className={style.mainContent}>
+            {loading ? (
+              <div className={style.clipLoader}>
+                <ClipLoader
+                  // style={{ marginTop: '5%' }}
+                  color="#cdd6e7"
+                  loading={loading}
+                  cssOverride={{}}
+                  size={70}
+                  speedMultiplier={1}
+                />
+              </div>
+            ) : (
+              <FileList />
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -3,10 +3,12 @@ import { FaCloudDownloadAlt } from 'react-icons/fa';
 
 import style from './NavBar.module.css';
 import { logOutUser } from '../../features/userSlice';
+import { setCurrentDir } from '../../features/fileSlice';
 
 function NavBar() {
   const dispatch = useDispatch();
   const handleLogout = () => {
+    dispatch(setCurrentDir(null));
     dispatch(logOutUser());
   };
   return (
