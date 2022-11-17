@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import style from './Popup.module.css';
-import { popupVis } from '../../features/fileSlice';
-import { createDir } from '../../features/fileSlice';
+import { popupVis, createDir } from '../../features/fileSlice';
 
 const Popup = () => {
   const [dirName, setDirName] = useState('');

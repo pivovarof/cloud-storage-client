@@ -13,7 +13,8 @@
 
 .file,
 .date,
-.size {
+.size,
+.btn {
   flex-grow: 2;
 }
 

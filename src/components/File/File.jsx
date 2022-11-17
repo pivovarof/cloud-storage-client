@@ -1,5 +1,7 @@
 import { ImFolderOpen } from 'react-icons/im';
 import { AiFillFileText } from 'react-icons/ai';
+import { FaDownload } from 'react-icons/fa';
+import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
 
 import style from './File.module.css';
@@ -8,6 +10,7 @@ import {
   setCurrentDirName,
   pushDirStack,
 } from '../../features/fileSlice';
+import { fileDownload } from '../../features/fileSlice';
 
 const File = ({ file }) => {
   const dispatch = useDispatch();
@@ -21,6 +24,11 @@ const File = ({ file }) => {
     }
   };
 
+  const downloadFileHandler = (e) => {
+    e.stopPropagation();
+    dispatch(fileDownload(file));
+  };
+
   return (
     <div className={style.fileList} onClick={() => openDirHandler(file)}>
       <div className={`${style.file} ${style.colum}`}>
@@ -31,6 +39,19 @@ const File = ({ file }) => {
         {file.date.slice(0, 10)}
       </div>
       <div className={`${style.size} ${style.colum}`}>{file.size}</div>
+      {file.type !== 'dir' ? (
+        <div className={`${style.buttons} ${style.colum}`}>
+          <FaDownload
+            className={style.btn}
+            onClick={(e) => downloadFileHandler(e)}
+          />
+          <RiDeleteBin2Fill className={style.btn} />
+        </div>
+      ) : (
+        <div className={`${style.buttons} ${style.colum}`}>
+          <RiDeleteBin2Fill className={style.btn} />
+        </div>
+      )}
     </div>
   );
 };

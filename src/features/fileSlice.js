@@ -70,30 +70,44 @@ export const fileUpload = createAsyncThunk(
         {
           headers: { Authorization: token },
           onUploadProgress: (progressEvent) => {
-            const totalLength = progressEvent.lengthComputable
-              ? progressEvent.total
-              : progressEvent.target.getResponseHeader('content-length') ||
-                progressEvent.target.getResponseHeader(
-                  'x-decompressed-content-length'
-                );
+            const totalLength = Math.round(
+              (progressEvent.loaded / progressEvent.total) * 100
+            );
 
-            // const totalLength = progressEvent.lengthComputable
-            //   ? progressEvent.total
-            //   : progressEvent.target.getResponseHeader('content-length') ||
-            //     progressEvent.target.getResponseHeader(
-            //       'x-decompressed-content-length'
-            //     );
-            console.log('total');
-            if (totalLength) {
-              let progress = Math.round(
-                (progressEvent.loaded * 100) / totalLength
-              );
-              console.log(progress);
-            }
+            console.log(totalLength);
           },
         }
       );
       dispatch(addFile(res.data));
+    } catch (e) {
+      return rejectWithValue(e);
+    }
+  }
+);
+
+export const fileDownload = createAsyncThunk(
+  'file/fileDownload',
+  async (file, { rejectWithValue, dispatch }) => {
+    try {
+      const token = `Bearer ${localStorage.getItem('token')}`;
+
+      const res = await fetch(
+        `http://localhost:5000/api/files/download?id=${file._id}`,
+
+        {
+          headers: { Authorization: token },
+        }
+      );
+      if (res.status === 200) {
+        const blob = await res.blob();
+        const downloadUrl = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = file.name;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }
     } catch (e) {
       return rejectWithValue(e);
     }

@@ -13,6 +13,7 @@ const FileList = () => {
         <div className={style.name}>Name</div>
         <div className={style.date}>Date</div>
         <div className={style.size}>Size</div>
+        <div className={style.btn}></div>
       </div>
       {files.length === 0 ? (
         <div className={style.noFiles}>No files</div>

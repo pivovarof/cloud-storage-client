@@ -14,7 +14,8 @@
 
 .file,
 .date,
-.size {
+.size,
+.buttons {
   flex-grow: 2;
 }
 
@@ -25,10 +26,20 @@
 
 .name {
   flex-grow: 6;
+  max-width: 500px;
 }
 
 .colum {
   color: #cdd6e7;
+}
+
+.btn {
+  font-size: 20px;
+  margin-right: 30px;
+}
+
+.buttons {
+  text-align: center;
 }
 
 @keyframes fileAnim {
