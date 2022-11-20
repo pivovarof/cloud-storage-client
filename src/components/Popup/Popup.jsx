@@ -11,7 +11,6 @@ const Popup = () => {
   const currentDir = useSelector((state) => state.file.currentDir);
 
   const setValue = (value) => {
-    console.log(value);
     setDirName(value);
   };
   const popupDisplayHandler = () => {

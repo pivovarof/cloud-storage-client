@@ -8,7 +8,7 @@ const Sidebar = () => {
   const currentDir = useSelector((state) => state.file.currentDir);
   const fileUploadHandler = (event) => {
     const files = [...event.target.files];
-    files.forEach((file) => dispatch(fileUpload({ file, currentDir })));
+    files.forEach((file) => dispatch(fileUpload({ file, dirId: currentDir })));
   };
   return (
     <div className={style.conteiner}>

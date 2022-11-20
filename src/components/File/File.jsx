@@ -9,8 +9,9 @@ import {
   setCurrentDir,
   setCurrentDirName,
   pushDirStack,
+  fileDownload,
+  fileDelete,
 } from '../../features/fileSlice';
-import { fileDownload } from '../../features/fileSlice';
 
 const File = ({ file }) => {
   const dispatch = useDispatch();
@@ -29,6 +30,11 @@ const File = ({ file }) => {
     dispatch(fileDownload(file));
   };
 
+  const deleteFileHandler = (e) => {
+    e.stopPropagation();
+    dispatch(fileDelete(file));
+  };
+
   return (
     <div className={style.fileList} onClick={() => openDirHandler(file)}>
       <div className={`${style.file} ${style.colum}`}>
@@ -42,14 +48,20 @@ const File = ({ file }) => {
       {file.type !== 'dir' ? (
         <div className={`${style.buttons} ${style.colum}`}>
           <FaDownload
-            className={style.btn}
+            className={`${style.btn} ${style.download}`}
             onClick={(e) => downloadFileHandler(e)}
           />
-          <RiDeleteBin2Fill className={style.btn} />
+          <RiDeleteBin2Fill
+            className={`${style.btn} ${style.delete}`}
+            onClick={(e) => deleteFileHandler(e)}
+          />
         </div>
       ) : (
         <div className={`${style.buttons} ${style.colum}`}>
-          <RiDeleteBin2Fill className={style.btn} />
+          <RiDeleteBin2Fill
+            className={style.btn}
+            onClick={(e) => deleteFileHandler(e)}
+          />
         </div>
       )}
     </div>

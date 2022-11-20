@@ -56,13 +56,16 @@ export const createDir = createAsyncThunk(
 export const fileUpload = createAsyncThunk(
   'file/fileUpload',
   async ({ file, dirId }, { rejectWithValue, dispatch }) => {
+    console.log(dirId);
     try {
       const token = `Bearer ${localStorage.getItem('token')}`;
       const formData = new FormData();
+
       formData.append('file', file);
       if (dirId) {
         formData.append('parent', dirId);
       }
+
       const res = await axios.post(
         'http://localhost:5000/api/files/upload',
         formData,
@@ -73,12 +76,31 @@ export const fileUpload = createAsyncThunk(
             const totalLength = Math.round(
               (progressEvent.loaded / progressEvent.total) * 100
             );
-
-            console.log(totalLength);
           },
         }
       );
       dispatch(addFile(res.data));
+    } catch (e) {
+      return rejectWithValue(e);
+    }
+  }
+);
+
+export const fileDelete = createAsyncThunk(
+  'file/fileDelete',
+  async (file, { rejectWithValue, dispatch }) => {
+    try {
+      const token = `Bearer ${localStorage.getItem('token')}`;
+
+      await axios.delete(
+        `http://localhost:5000/api/files?id=${file._id}`,
+
+        {
+          headers: { Authorization: token },
+        }
+      );
+
+      dispatch(deleteFile(file._id));
     } catch (e) {
       return rejectWithValue(e);
     }
@@ -98,6 +120,7 @@ export const fileDownload = createAsyncThunk(
           headers: { Authorization: token },
         }
       );
+
       if (res.status === 200) {
         const blob = await res.blob();
         const downloadUrl = window.URL.createObjectURL(blob);
@@ -142,6 +165,12 @@ const fileSlice = createSlice({
         dirStack: [...state.dirStack.slice(0, -1)],
       };
     },
+    deleteFile: (state, action) => {
+      return {
+        ...state,
+        files: [...state.files.filter((file) => file._id !== action.payload)],
+      };
+    },
   },
   extraReducers: {
     [getFiles.pending]: (state) => {
@@ -165,5 +194,6 @@ export const {
   popupVis,
   pushDirStack,
   popDirStack,
+  deleteFile,
 } = fileSlice.actions;
 export default fileSlice.reducer;

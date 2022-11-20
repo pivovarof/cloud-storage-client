@@ -12,6 +12,16 @@
   animation: fileAnim 0.5s ease 0s 1 normal forwards;
 }
 
+.fileList:hover .btn {
+  visibility: visible;
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
 .file,
 .date,
 .size,
@@ -36,6 +46,14 @@
 .btn {
   font-size: 20px;
   margin-right: 30px;
+  visibility: hidden;
+}
+
+.delete:hover {
+  color: rgb(221, 61, 61);
+}
+.download:hover {
+  color: rgb(15, 130, 91);
 }
 
 .buttons {
@@ -51,5 +69,14 @@
   100% {
     box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.35);
     transform: scale(1.01);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }
