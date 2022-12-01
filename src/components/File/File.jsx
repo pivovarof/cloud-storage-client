@@ -10,7 +10,8 @@ import {
   setCurrentDirName,
   pushDirStack,
   fileDownload,
-  fileDelete,
+  setCurrentFile,
+  popupGenVis,
 } from '../../features/fileSlice';
 
 const File = ({ file }) => {
@@ -21,6 +22,7 @@ const File = ({ file }) => {
     if (file.type === 'dir') {
       dispatch(pushDirStack(currentDir));
       dispatch(setCurrentDir(file._id));
+
       dispatch(setCurrentDirName(file.name));
     }
   };
@@ -32,7 +34,21 @@ const File = ({ file }) => {
 
   const deleteFileHandler = (e) => {
     e.stopPropagation();
-    dispatch(fileDelete(file));
+    dispatch(popupGenVis('flex'));
+    dispatch(setCurrentFile(file));
+  };
+
+  const formatSize = (size) => {
+    if (size > 1024 * 1024 * 1024) {
+      return (size / (1024 * 1024 * 1024)).toFixed(1) + 'GB';
+    }
+    if (size > 1024 * 1024) {
+      return (size / (1024 * 1024)).toFixed(1) + 'MB';
+    }
+    if (size > 1024) {
+      return (size / 1024).toFixed(1) + 'KB';
+    }
+    return size + 'B';
   };
 
   return (
@@ -44,7 +60,9 @@ const File = ({ file }) => {
       <div className={`${style.date} ${style.colum}`}>
         {file.date.slice(0, 10)}
       </div>
-      <div className={`${style.size} ${style.colum}`}>{file.size}</div>
+      <div className={`${style.size} ${style.colum}`}>
+        {formatSize(file.size)}
+      </div>
       {file.type !== 'dir' ? (
         <div className={`${style.buttons} ${style.colum}`}>
           <FaDownload
@@ -59,7 +77,7 @@ const File = ({ file }) => {
       ) : (
         <div className={`${style.buttons} ${style.colum}`}>
           <RiDeleteBin2Fill
-            className={style.btn}
+            className={`${style.btn} ${style.delete}`}
             onClick={(e) => deleteFileHandler(e)}
           />
         </div>

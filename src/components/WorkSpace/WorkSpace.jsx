@@ -8,6 +8,7 @@ import FileList from '../FileList/FileList';
 import Sidebar from '../Sidebar/Sidebar';
 import MenuControl from '../Menu/MenuControl';
 import Popup from '../Popup/Popup';
+import PopupGeniral from '../PopupGeniral/PopupGeniral';
 import { getFiles } from '../../features/fileSlice';
 
 const WorkSpace = () => {
@@ -23,6 +24,7 @@ const WorkSpace = () => {
     <div className={style.wrapWorkSpace}>
       <div className={style.wrapContent}>
         <Popup />
+        <PopupGeniral />
         <NavBar />
         <MenuControl />
         <div className={style.wrapMainContent}>
@@ -32,7 +34,6 @@ const WorkSpace = () => {
             {loading ? (
               <div className={style.clipLoader}>
                 <ClipLoader
-                  // style={{ marginTop: '5%' }}
                   color="#cdd6e7"
                   loading={loading}
                   cssOverride={{}}

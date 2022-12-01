@@ -5,9 +5,13 @@ const initialState = {
   files: [],
   currentDir: null,
   currentDirName: null,
+  currentFile: null,
   popupDisplay: 'none',
+  popupGenDisplay: 'none',
   dirStack: [],
   loading: false,
+  uploadLength: null,
+  uploadFiles: [],
 };
 
 export const getFiles = createAsyncThunk(
@@ -56,7 +60,6 @@ export const createDir = createAsyncThunk(
 export const fileUpload = createAsyncThunk(
   'file/fileUpload',
   async ({ file, dirId }, { rejectWithValue, dispatch }) => {
-    console.log(dirId);
     try {
       const token = `Bearer ${localStorage.getItem('token')}`;
       const formData = new FormData();
@@ -76,6 +79,7 @@ export const fileUpload = createAsyncThunk(
             const totalLength = Math.round(
               (progressEvent.loaded / progressEvent.total) * 100
             );
+            dispatch(setUploadLength(totalLength));
           },
         }
       );
@@ -147,6 +151,9 @@ const fileSlice = createSlice({
     setCurrentDir: (state, action) => {
       return { ...state, currentDir: action.payload };
     },
+    setCurrentFile: (state, action) => {
+      return { ...state, currentFile: action.payload };
+    },
     setCurrentDirName: (state, action) => {
       return { ...state, currentDirName: action.payload };
     },
@@ -155,6 +162,9 @@ const fileSlice = createSlice({
     },
     popupVis: (state, action) => {
       return { ...state, popupDisplay: action.payload };
+    },
+    popupGenVis: (state, action) => {
+      return { ...state, popupGenDisplay: action.payload };
     },
     pushDirStack: (state, action) => {
       return { ...state, dirStack: [...state.dirStack, action.payload] };
@@ -171,6 +181,18 @@ const fileSlice = createSlice({
         files: [...state.files.filter((file) => file._id !== action.payload)],
       };
     },
+    setUploadLength: (state, action) => {
+      return {
+        ...state,
+        uploadLength: action.payload,
+      };
+    },
+    setUploadFiles: (state, action) => {
+      return {
+        ...state,
+        uploadFiles: [...state.uploadFiles, ...action.payload],
+      };
+    },
   },
   extraReducers: {
     [getFiles.pending]: (state) => {
@@ -183,17 +205,33 @@ const fileSlice = createSlice({
     [getFiles.rejected]: (state, action) => {
       state.loading = false;
     },
+    [fileUpload.pending]: (state) => {
+      state.uploadFiles = [];
+      console.log('pending');
+    },
+    [fileUpload.fulfilled]: (state, action) => {
+      state.uploadLength = null;
+      console.log('fulfilled');
+    },
+
+    [fileUpload.rejected]: (state, action) => {
+      console.log('rejected');
+    },
   },
 });
 
 export const {
   setFiles,
   setCurrentDir,
+  setCurrentFile,
   setCurrentDirName,
   addFile,
   popupVis,
+  popupGenVis,
   pushDirStack,
   popDirStack,
   deleteFile,
+  setUploadLength,
+  setUploadFiles,
 } = fileSlice.actions;
 export default fileSlice.reducer;

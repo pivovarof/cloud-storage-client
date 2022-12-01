@@ -2,13 +2,21 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import style from './Sidebar.module.css';
 import { fileUpload } from '../../features/fileSlice';
+import Uploader from './Uploader/Uploader';
+import { setUploadFiles } from '../../features/fileSlice';
 
 const Sidebar = () => {
   const dispatch = useDispatch();
   const currentDir = useSelector((state) => state.file.currentDir);
   const fileUploadHandler = (event) => {
     const files = [...event.target.files];
-    files.forEach((file) => dispatch(fileUpload({ file, dirId: currentDir })));
+
+    const arr = [];
+    files.forEach((file) => {
+      dispatch(fileUpload({ file, dirId: currentDir }));
+      arr.push(file.name);
+      dispatch(setUploadFiles(arr));
+    });
   };
   return (
     <div className={style.conteiner}>
@@ -25,6 +33,7 @@ const Sidebar = () => {
           fileUploadHandler(e);
         }}
       />
+      <Uploader />
     </div>
   );
 };
