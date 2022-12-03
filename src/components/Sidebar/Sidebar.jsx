@@ -4,6 +4,7 @@ import style from './Sidebar.module.css';
 import { fileUpload } from '../../features/fileSlice';
 import Uploader from './Uploader/Uploader';
 import { setUploadFiles } from '../../features/fileSlice';
+import DiskSpace from './DiskSpace/DiskSpace';
 
 const Sidebar = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const Sidebar = () => {
   return (
     <div className={style.conteiner}>
       <div className={style.folderPath}>Folder:</div>
+      <DiskSpace />
       <label htmlFor="inputUpload" className={style.lableUpload}>
         Upload file
       </label>

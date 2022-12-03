@@ -6,6 +6,7 @@ const initialState = {
   isAuth: false,
   loading: false,
   error: null,
+  usedSpace: null,
 };
 
 export const signUpUser = createAsyncThunk(
@@ -45,7 +46,7 @@ export const getUser = createAsyncThunk(
       }
       console.log(res.data.user);
       dispatch(setUser(res.data.user));
-
+      // dispatch(setUsedSpace())
       localStorage.setItem('token', res.data.token);
     } catch (error) {
       const messageError = error.response.data.message;
@@ -80,9 +81,6 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    singUpUser: (state, action) => {
-      return;
-    },
     setUser: (state, action) => {
       return {
         ...state,
@@ -97,6 +95,9 @@ export const userSlice = createSlice({
         isAuth: false,
         currentUser: {},
       };
+    },
+    setUsedSpace: (state, action) => {
+      return { ...state, usedSpace: action.payload };
     },
   },
   extraReducers: {
@@ -134,5 +135,5 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser, logOutUser } = userSlice.actions;
+export const { setUser, logOutUser, setUsedSpace } = userSlice.actions;
 export default userSlice.reducer;

@@ -1,0 +1,34 @@
+.conteiner {
+  width: 100%;
+  margin: 40px 10px;
+}
+
+.conteiner h4 {
+  color: #cdd6e7;
+}
+.conteiner span {
+  color: #7987a9;
+}
+
+.diskSpaceWrap {
+  width: 100%;
+  height: 15px;
+  margin: 15px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.diskSpace {
+  width: 50%;
+  height: 100%;
+  border-radius: 10px;
+  border: 1px solid white;
+  background-color: white;
+}
+
+.usedSpace {
+  width: 50%;
+  height: 100%;
+  background-color: rgb(47, 47, 78);
+  border-radius: 10px;
+}
