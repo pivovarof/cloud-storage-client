@@ -3,8 +3,10 @@ import { AiFillFileText } from 'react-icons/ai';
 import { FaDownload } from 'react-icons/fa';
 import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 import style from './File.module.css';
+import formatSize from '../../utilities/formatSize';
 import {
   setCurrentDir,
   setCurrentDirName,
@@ -12,18 +14,20 @@ import {
   fileDownload,
   setCurrentFile,
   popupGenVis,
+  setPath,
 } from '../../features/fileSlice';
 
 const File = ({ file }) => {
   const dispatch = useDispatch();
   const currentDir = useSelector((state) => state.file.currentDir);
+  const delLoading = useSelector((state) => state.file.delLoading);
 
   const openDirHandler = (file) => {
     if (file.type === 'dir') {
       dispatch(pushDirStack(currentDir));
       dispatch(setCurrentDir(file._id));
-
       dispatch(setCurrentDirName(file.name));
+      dispatch(setPath(file.name));
     }
   };
 
@@ -36,19 +40,6 @@ const File = ({ file }) => {
     e.stopPropagation();
     dispatch(popupGenVis('flex'));
     dispatch(setCurrentFile(file));
-  };
-
-  const formatSize = (size) => {
-    if (size > 1024 * 1024 * 1024) {
-      return (size / (1024 * 1024 * 1024)).toFixed(1) + 'GB';
-    }
-    if (size > 1024 * 1024) {
-      return (size / (1024 * 1024)).toFixed(1) + 'MB';
-    }
-    if (size > 1024) {
-      return (size / 1024).toFixed(1) + 'KB';
-    }
-    return size + 'B';
   };
 
   return (
@@ -69,17 +60,37 @@ const File = ({ file }) => {
             className={`${style.btn} ${style.download}`}
             onClick={(e) => downloadFileHandler(e)}
           />
-          <RiDeleteBin2Fill
-            className={`${style.btn} ${style.delete}`}
-            onClick={(e) => deleteFileHandler(e)}
-          />
+          {delLoading ? (
+            <ClipLoader
+              color="#cdd6e7"
+              loading={delLoading}
+              cssOverride={{}}
+              size={10}
+              speedMultiplier={1}
+            />
+          ) : (
+            <RiDeleteBin2Fill
+              className={`${style.btn} ${style.delete}`}
+              onClick={(e) => deleteFileHandler(e)}
+            />
+          )}
         </div>
       ) : (
         <div className={`${style.buttons} ${style.colum}`}>
-          <RiDeleteBin2Fill
-            className={`${style.btn} ${style.delete}`}
-            onClick={(e) => deleteFileHandler(e)}
-          />
+          {delLoading ? (
+            <ClipLoader
+              color="#cdd6e7"
+              loading={delLoading}
+              cssOverride={{}}
+              size={10}
+              speedMultiplier={1}
+            />
+          ) : (
+            <RiDeleteBin2Fill
+              className={`${style.btn} ${style.delete}`}
+              onClick={(e) => deleteFileHandler(e)}
+            />
+          )}
         </div>
       )}
     </div>

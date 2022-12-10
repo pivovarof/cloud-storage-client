@@ -11,6 +11,13 @@
   color: #7987a9;
 }
 
+.path {
+  text-align: start;
+  margin-bottom: 20px;
+  color: #cdd6e7;
+  height: 20px;
+}
+
 .file,
 .date,
 .size,

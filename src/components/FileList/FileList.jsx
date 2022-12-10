@@ -5,9 +5,13 @@ import File from '../File/File';
 
 const FileList = () => {
   const files = useSelector((state) => state.file.files);
+  const path = useSelector((state) => state.file.path);
 
   return (
     <div className={style.wrapFileList}>
+      <div className={style.path}>
+        {path.map((folder) => '/ ' + folder + ' ')}
+      </div>
       <div className={style.headerline}>
         <div className={style.file}></div>
         <div className={style.name}>Name</div>

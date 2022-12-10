@@ -4,18 +4,28 @@ import { BiSortDown } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 
 import style from './MenuControl.module.css';
-import { setCurrentDir, popDirStack, popupVis } from '../../features/fileSlice';
+import {
+  setCurrentDir,
+  popDirStack,
+  popupVis,
+  delPath,
+} from '../../features/fileSlice';
 
 const MenuControl = () => {
   const dispatch = useDispatch();
   const dirStack = useSelector((state) => [...state.file.dirStack].pop());
+  const dir = useSelector((state) =>
+    state.file.files.filter((e) => e._id === dirStack)
+  );
 
   const createDirHandler = () => {
     dispatch(popupVis('flex'));
   };
   const clickBackHandler = () => {
+    console.log(dir);
     dispatch(setCurrentDir(dirStack));
     dispatch(popDirStack());
+    dispatch(delPath());
   };
   return (
     <div className={style.wrapMenu}>

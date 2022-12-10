@@ -1,17 +1,21 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+import { decUsedSpace, incUsedSpace } from './userSlice';
+
 const initialState = {
   files: [],
   currentDir: null,
   currentDirName: null,
   currentFile: null,
+  path: [],
   popupDisplay: 'none',
   popupGenDisplay: 'none',
   dirStack: [],
   loading: false,
   uploadLength: null,
   uploadFiles: [],
+  delLoading: false,
 };
 
 export const getFiles = createAsyncThunk(
@@ -83,6 +87,7 @@ export const fileUpload = createAsyncThunk(
           },
         }
       );
+      dispatch(incUsedSpace(res.data.size));
       dispatch(addFile(res.data));
     } catch (e) {
       return rejectWithValue(e);
@@ -105,6 +110,7 @@ export const fileDelete = createAsyncThunk(
       );
 
       dispatch(deleteFile(file._id));
+      dispatch(decUsedSpace(file.size));
     } catch (e) {
       return rejectWithValue(e);
     }
@@ -160,6 +166,12 @@ const fileSlice = createSlice({
     addFile: (state, action) => {
       return { ...state, files: [...state.files, action.payload] };
     },
+    setPath: (state, action) => {
+      return { ...state, path: [...state.path, action.payload] };
+    },
+    delPath: (state) => {
+      state.path = state.path.slice(0, -1);
+    },
     popupVis: (state, action) => {
       return { ...state, popupDisplay: action.payload };
     },
@@ -198,24 +210,26 @@ const fileSlice = createSlice({
     [getFiles.pending]: (state) => {
       state.loading = true;
     },
-    [getFiles.fulfilled]: (state, action) => {
+    [getFiles.fulfilled]: (state) => {
       state.loading = false;
     },
 
-    [getFiles.rejected]: (state, action) => {
+    [getFiles.rejected]: (state) => {
       state.loading = false;
     },
     [fileUpload.pending]: (state) => {
       state.uploadFiles = [];
       console.log('pending');
     },
-    [fileUpload.fulfilled]: (state, action) => {
+    [fileUpload.fulfilled]: (state) => {
       state.uploadLength = null;
-      console.log('fulfilled');
     },
 
-    [fileUpload.rejected]: (state, action) => {
-      console.log('rejected');
+    [fileDelete.pending]: (state) => {
+      state.delLoading = true;
+    },
+    [fileDelete.fulfilled]: (state) => {
+      state.delLoading = false;
     },
   },
 });
@@ -233,5 +247,7 @@ export const {
   deleteFile,
   setUploadLength,
   setUploadFiles,
+  setPath,
+  delPath,
 } = fileSlice.actions;
 export default fileSlice.reducer;

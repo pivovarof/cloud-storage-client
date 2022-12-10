@@ -1,6 +1,7 @@
 .conteiner {
   padding: 10px;
-  flex-grow: 2;
+  /* flex-grow: 2; */
+  width: 300px;
 }
 
 .inputUpload {

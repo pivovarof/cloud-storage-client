@@ -6,7 +6,8 @@ const initialState = {
   isAuth: false,
   loading: false,
   error: null,
-  usedSpace: null,
+  diskSpace: 10737418240,
+  usedSpace: 0,
 };
 
 export const signUpUser = createAsyncThunk(
@@ -44,9 +45,9 @@ export const getUser = createAsyncThunk(
       if (!res.statusText) {
         throw new Error('Server error!');
       }
-      console.log(res.data.user);
+
       dispatch(setUser(res.data.user));
-      // dispatch(setUsedSpace())
+      dispatch(setUsedSpace(res.data.user.usedSpace));
       localStorage.setItem('token', res.data.token);
     } catch (error) {
       const messageError = error.response.data.message;
@@ -58,7 +59,7 @@ export const getUser = createAsyncThunk(
 
 export const authUser = createAsyncThunk(
   'user/authUser',
-  async (user, { rejectWithValue, dispatch }) => {
+  async (_, { rejectWithValue, dispatch }) => {
     try {
       const res = await axios.get('http://localhost:5000/api/auth/auth', {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
@@ -68,7 +69,7 @@ export const authUser = createAsyncThunk(
         throw new Error('Server error!');
       }
       dispatch(setUser(res.data.user));
-      // localStorage.setItem('token', res.data.token);
+      dispatch(setUsedSpace(res.data.user.usedSpace));
     } catch (error) {
       const messageError = error.response.data.message;
       localStorage.removeItem('token');
@@ -97,7 +98,13 @@ export const userSlice = createSlice({
       };
     },
     setUsedSpace: (state, action) => {
-      return { ...state, usedSpace: action.payload };
+      state.usedSpace = action.payload;
+    },
+    incUsedSpace: (state, action) => {
+      state.usedSpace += action.payload;
+    },
+    decUsedSpace: (state, action) => {
+      state.usedSpace -= action.payload;
     },
   },
   extraReducers: {
@@ -135,5 +142,6 @@ export const userSlice = createSlice({
   },
 });
 
-export const { setUser, logOutUser, setUsedSpace } = userSlice.actions;
+export const { setUser, logOutUser, setUsedSpace, incUsedSpace, decUsedSpace } =
+  userSlice.actions;
 export default userSlice.reducer;
