@@ -146,6 +146,25 @@ export const fileDownload = createAsyncThunk(
     }
   }
 );
+export const searchFiles = createAsyncThunk(
+  'file/searchFiles',
+  async (searchName, { rejectWithValue, dispatch }) => {
+    try {
+      const token = `Bearer ${localStorage.getItem('token')}`;
+
+      const res = await axios.get(
+        `http://localhost:5000/api/files/search?search=${searchName}`,
+        {
+          headers: { Authorization: token },
+        }
+      );
+
+      dispatch(setFiles(res.data));
+    } catch (e) {
+      return rejectWithValue(e);
+    }
+  }
+);
 
 const fileSlice = createSlice({
   name: 'file',
