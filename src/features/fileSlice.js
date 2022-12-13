@@ -16,20 +16,27 @@ const initialState = {
   uploadLength: null,
   uploadFiles: [],
   delLoading: false,
+  sort: 'type',
 };
 
 export const getFiles = createAsyncThunk(
   'file/getFiles',
-  async (dirId, { rejectWithValue, dispatch }) => {
+  async ({ dirId, sort }, { rejectWithValue, dispatch }) => {
     try {
+      let url = 'http://localhost:5000/api/files';
+      if (dirId) {
+        url = `http://localhost:5000/api/files?parent=${dirId}`;
+      }
+      if (sort) {
+        url = `http://localhost:5000/api/files?sort=${sort}`;
+      }
+      if (dirId && sort) {
+        url = `http://localhost:5000/api/files?parent=${dirId}&sort=${sort}`;
+      }
       const token = `Bearer ${localStorage.getItem('token')}`;
-
-      const res = await axios.get(
-        `http://localhost:5000/api/files${dirId ? '?parent=' + dirId : ''}`,
-        {
-          headers: { Authorization: token },
-        }
-      );
+      const res = await axios.get(url, {
+        headers: { Authorization: token },
+      });
 
       dispatch(setFiles(res.data));
     } catch (e) {
@@ -224,6 +231,9 @@ const fileSlice = createSlice({
         uploadFiles: [...state.uploadFiles, ...action.payload],
       };
     },
+    setSort: (state, action) => {
+      state.sort = action.payload;
+    },
   },
   extraReducers: {
     [getFiles.pending]: (state) => {
@@ -268,5 +278,6 @@ export const {
   setUploadFiles,
   setPath,
   delPath,
+  setSort,
 } = fileSlice.actions;
 export default fileSlice.reducer;

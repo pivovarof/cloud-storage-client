@@ -10,7 +10,7 @@ const FileList = () => {
   return (
     <div className={style.wrapFileList}>
       <div className={style.path}>
-        {path.map((folder) => '/ ' + folder + ' ')}
+        {path.map((folder) => ' > ' + folder + ' ')}
       </div>
       <div className={style.headerline}>
         <div className={style.file}></div>

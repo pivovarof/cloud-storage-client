@@ -15,10 +15,11 @@ const WorkSpace = () => {
   const dispatch = useDispatch();
   const currentDir = useSelector((state) => state.file.currentDir);
   const loading = useSelector((state) => state.file.loading);
+  const sort = useSelector((state) => state.file.sort);
 
   useEffect(() => {
-    dispatch(getFiles(currentDir));
-  }, [currentDir, dispatch]);
+    dispatch(getFiles({ dirId: currentDir, sort }));
+  }, [currentDir, sort, dispatch]);
 
   return (
     <div className={style.wrapWorkSpace}>

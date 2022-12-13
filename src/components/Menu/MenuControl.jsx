@@ -9,23 +9,23 @@ import {
   popDirStack,
   popupVis,
   delPath,
+  setSort,
 } from '../../features/fileSlice';
 
 const MenuControl = () => {
   const dispatch = useDispatch();
   const dirStack = useSelector((state) => [...state.file.dirStack].pop());
-  const dir = useSelector((state) =>
-    state.file.files.filter((e) => e._id === dirStack)
-  );
 
   const createDirHandler = () => {
     dispatch(popupVis('flex'));
   };
   const clickBackHandler = () => {
-    console.log(dir);
     dispatch(setCurrentDir(dirStack));
     dispatch(popDirStack());
     dispatch(delPath());
+  };
+  const sortHandler = (val) => {
+    dispatch(setSort(val));
   };
   return (
     <div className={style.wrapMenu}>
@@ -42,6 +42,20 @@ const MenuControl = () => {
         >
           <RiArrowGoBackLine />
         </button>
+      </div>
+      <div className={style.sortWrap}>
+        Sort by:
+        <select
+          onChange={(e) => sortHandler(e.target.value)}
+          className={style.sortSelect}
+        >
+          <option defaultChecked value="type">
+            Type
+          </option>
+          <option value="name">Name</option>
+          <option value="date">Date</option>
+          <option value="size">Size</option>
+        </select>
       </div>
       <div className={style.btnDisplay}>
         <button className={`${style.sort} ${style.btn}`}>
